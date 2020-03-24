@@ -28,16 +28,17 @@ status AS
 FROM cross_join),
 
 status_aggregate AS
-(SELECT sum(is_active_87) as sum_active_87, 
+(SELECT month, sum(is_active_87) as sum_active_87, 
  sum(is_active_30) as sum_active_30, 
  sum(is_canceled_87) as sum_canceled_87, 
  sum(is_canceled_30) as sum_canceled_30
+FROM status
+GROUP BY month)
 
-FROM status)
-
-SELECT 
+SELECT month,
 ROUND((1.0* sum_canceled_87 / sum_active_87),2) as 'Segment 87 Churn Rate', 
 ROUND((1.0* sum_canceled_30 / sum_active_30),2) as 'Segment 87 Churn Rate'
-from status_aggregate;
+from status_aggregate
+GROUP BY month;
 
--- Segment 87 has lower churn rate (9%) compared to Segment 30 (37%)
+-- Segment 87 has lower churn rate (9%) compared to Segment 30 (37%)--
